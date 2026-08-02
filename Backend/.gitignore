@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Environment Variables
+.env
+
+# Database
+*.db
+
+# Flask
+instance/
+.webassets-cache
+
+# Migrations cache
+migrations/__pycache__/
+
+# IDE
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Pytest
+.pytest_cache/
+
+# Build
+build/
+dist/
+
+# Coverage
+.coverage
+htmlcov/
+
+# OS
+Thumbs.db
