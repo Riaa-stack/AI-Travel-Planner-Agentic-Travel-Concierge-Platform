@@ -3,6 +3,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
+GEOAPIFY_API_KEY = os.getenv("GEOAPIFY_API_KEY")
+
 
 class Config:
     SECRET_KEY = os.getenv("SECRET_KEY")
@@ -12,6 +15,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+    GEOAPIFY_API_KEY = GEOAPIFY_API_KEY
 
     GEMINI_MODEL = os.getenv(
         "GEMINI_MODEL",
@@ -28,11 +32,11 @@ class Config:
     GEMINI_MAX_OUTPUT_TOKENS = int(
         os.getenv(
             "GEMINI_MAX_OUTPUT_TOKENS",
-            2048
+            8192
         )
     )
 
-    OPENWEATHER_API_KEY = os.getenv("OPENWEATHER_API_KEY")
+    OPENWEATHER_API_KEY = OPENWEATHER_API_KEY
     HOTEL_API_KEY = os.getenv("HOTEL_API_KEY")
 
 

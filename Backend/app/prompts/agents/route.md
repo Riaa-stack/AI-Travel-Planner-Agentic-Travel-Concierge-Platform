@@ -12,7 +12,8 @@ You will receive JSON like:
 
 {
   "destination": "",
-  "days": 0,
+  "day": 1,
+  "total_days": 5,
   "travel_style": "",
   "budget_type": "",
   "interests": [],
@@ -23,7 +24,11 @@ You will receive JSON like:
 
 # INSTRUCTIONS
 
-Generate one itinerary object for each day.
+Generate the itinerary ONLY for the requested day.
+
+Do not generate any other days.
+
+The response must contain only one day.
 
 Use realistic attractions.
 
@@ -49,19 +54,48 @@ Every key must use double quotes.
 
 The response MUST be valid JSON.
 
+Every activity must contain a real tourist location.
+
+The "location" field should contain only the place name.
+
+Example:
+
+"location": "Fort Aguada"
+
+Do not include descriptions inside the location field.
+
+The activity_name should describe what the traveler will do.
+
 ---
 
-# OUTPUT
+# OUTPUT FORMAT
 
 {
-  "days": [
-    {
-      "day": 1,
-      "theme": "",
-      "activities": [
-        ""
-      ],
-      "estimated_cost": 0
-    }
-  ]
+    "days": [
+        {
+            "day": 1,
+            "theme": "",
+            "activities": [
+                {
+                    "activity_name": "",
+                    "location": "",
+                    "time": "Morning",
+                    "estimated_cost": 0
+                },
+                {
+                    "activity_name": "",
+                    "location": "",
+                    "time": "Afternoon",
+                    "estimated_cost": 0
+                },
+                {
+                    "activity_name": "",
+                    "location": "",
+                    "time": "Evening",
+                    "estimated_cost": 0
+                }
+            ],
+            "travel_tip": ""
+        }
+    ]
 }

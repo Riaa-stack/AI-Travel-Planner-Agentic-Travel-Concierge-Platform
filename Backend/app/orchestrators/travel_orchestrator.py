@@ -5,6 +5,7 @@ from app.agents.weather_agent import WeatherAgent
 from app.agents.crowd_agent import CrowdAgent
 from app.agents.travel_companion_agent import TravelCompanionAgent
 from app.agents.replanning_agent import ReplanningAgent
+from app.external.geoapify_api import GeoapifyAPI
 
 
 class TravelOrchestrator:
@@ -35,12 +36,44 @@ class TravelOrchestrator:
         )["data"]
 
         # Step 3: Generate itinerary
-        route = self.route_agent.execute(
-            {
-                **user_input,
-                **preference
-            }
-        )["data"]
+        route_agent = RouteAgent()
+        route_days = []
+
+        for day in range(1, user_input["days"] + 1):
+
+            result = route_agent.execute(
+                {
+                    "destination": user_input["destination"],
+                    "day": day,
+                    "total_days": user_input["days"],
+                    "travel_style": preference["travel_style"],
+                    "budget_type": preference["budget_type"],
+                    "interests": user_input["interests"],
+                    "season": user_input["season"]
+                }
+            )
+
+            route_days.extend(result["data"]["days"])
+
+        route = {
+            "days": route_days
+        }
+
+        geoapify = GeoapifyAPI()
+
+        for day in route_days:
+            for activity in day["activities"]:
+                location = activity["location"]
+                coordinates = geoapify.geocode(location)
+                activity["coordinates"] = coordinates
+                activity["nearby_hotels"] = geoapify.search_hotels(
+                    coordinates["latitude"],
+                    coordinates["longitude"]
+                )
+                activity["nearby_places"] = geoapify.search_places(
+                    coordinates["latitude"],
+                    coordinates["longitude"]
+                )
 
         # Step 4: Analyze weather
         weather = self.weather_agent.execute(

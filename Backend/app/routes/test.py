@@ -11,6 +11,8 @@ from app.agents.travel_companion_agent import TravelCompanionAgent
 from app.agents.weather_agent import WeatherAgent
 from app.extensions import db
 from app.external.gemini_client import GeminiClient
+from app.external.geoapify_api import GeoapifyAPI
+from app.external.weather_api import WeatherAPI
 from app.orchestrators.travel_orchestrator import TravelOrchestrator
 from app.utils.json_parser import JSONParser
 from app.utils.output_validator import OutputValidator
@@ -221,7 +223,8 @@ def route_agent_test():
         result = agent.execute(
             {
                 "destination": "Goa",
-                "days": 2,
+                "day": 1,
+                "total_days": 5,
                 "travel_style": "Party & Adventure",
                 "budget_type": "Mid-range",
                 "interests": [
@@ -400,7 +403,7 @@ def orchestrator_test():
             {
                 "destination": "Goa",
                 "budget": 30000,
-                "days": 5,
+                "days": 2,
                 "interests": [
                     "Beach",
                     "Adventure",
@@ -440,6 +443,138 @@ def gemini_test():
             "success": True,
             "response": response
         }, 200
+
+    except Exception as e:
+
+        return {
+            "success": False,
+            "message": str(e)
+        }, 500
+
+
+@test_bp.route("/weather-api", methods=["GET"])
+def weather_api_test():
+
+    try:
+
+        api = WeatherAPI()
+
+        data = api.get_forecast("Goa")
+
+        return {
+            "success": True,
+            "city": data["city"]["name"],
+            "country": data["city"]["country"],
+            "forecast_count": len(data["list"])
+        }
+
+    except Exception as e:
+
+        return {
+            "success": False,
+            "message": str(e)
+        }, 500
+
+
+@test_bp.route("/geoapify", methods=["GET"])
+def geoapify_test():
+
+    try:
+
+        api = GeoapifyAPI()
+
+        result = api.geocode("Goa")
+
+        return {
+            "success": True,
+            "data": result
+        }
+
+    except Exception as e:
+
+        return {
+            "success": False,
+            "message": str(e)
+        }, 500
+
+
+@test_bp.route("/places", methods=["GET"])
+def places_test():
+
+    try:
+
+        api = GeoapifyAPI()
+
+        location = api.geocode("Panaji")
+
+        places = api.search_places(
+            location["latitude"],
+            location["longitude"]
+        )
+
+        return {
+            "success": True,
+            "total_places": len(places),
+            "places": places
+        }
+
+    except Exception as e:
+
+        return {
+            "success": False,
+            "message": str(e)
+        }, 500
+
+
+@test_bp.route("/hotels", methods=["GET"])
+def hotels_test():
+
+    try:
+
+        api = GeoapifyAPI()
+
+        location = api.geocode("Panaji")
+
+        hotels = api.search_hotels(
+            location["latitude"],
+            location["longitude"]
+        )
+
+        return {
+            "success": True,
+            "total_hotels": len(hotels),
+            "hotels": hotels
+        }
+
+    except Exception as e:
+
+        return {
+            "success": False,
+            "message": str(e)
+        }, 500
+
+
+@test_bp.route("/route-api", methods=["GET"])
+def route_api_test():
+
+    try:
+
+        api = GeoapifyAPI()
+
+        start = api.geocode("Fort Aguada")
+        end = api.geocode("Baga Beach")
+
+        route = api.get_route(
+            start["latitude"],
+            start["longitude"],
+            end["latitude"],
+            end["longitude"]
+        )
+
+        return {
+            "success": True,
+            "route": route
+        }
 
     except Exception as e:
 
