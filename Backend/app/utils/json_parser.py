@@ -39,5 +39,7 @@ class JSONParser:
         if match:
             return json.loads(match.group())
 
-        raise ValueError("No valid JSON found.")
+        raise ValueError(
+            f"No valid JSON found.\n\nGemini Response:\n{text}"
+        )
     

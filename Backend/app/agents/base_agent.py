@@ -45,26 +45,37 @@ class BaseAgent(ABC):
             ensure_ascii=False
         )
 
-        response = self.client.generate(
-            system_prompt=self.prompt,
-            user_prompt=user_prompt,
-            temperature=temperature
-        )
+        for attempt in range(3):
 
-        print("\n========== RAW GEMINI RESPONSE ==========")
-        print(response)
-        print("=========================================\n")
+            response = self.client.generate(
+                system_prompt=self.prompt,
+                user_prompt=user_prompt,
+                temperature=temperature
+            )
 
-        try:
-            parsed = JSONParser.parse(response)
-        except Exception:
-            traceback.print_exc()
-            raise
+            print(f"\n========== {self.__class__.__name__} ==========")
+            print(response)
+            print("=============================================\n")
 
-        OutputValidator.validate(
-            parsed,
-            self.required_fields
-        )
+            try:
+
+                parsed = JSONParser.parse(response)
+
+                OutputValidator.validate(
+                    parsed,
+                    self.required_fields
+                )
+
+                break
+
+            except Exception:
+
+                print(
+                    f"⚠ Invalid JSON from {self.__class__.__name__}. Retrying ({attempt+1}/3)..."
+                )
+
+                if attempt == 2:
+                    raise
 
         execution_time = round(
             time.perf_counter() - start_time,

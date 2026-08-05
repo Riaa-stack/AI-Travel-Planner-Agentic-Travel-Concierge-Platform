@@ -142,6 +142,9 @@ def plan_trip():
         }, 200
 
     except Exception as e:
+        import traceback
+
+        traceback.print_exc()
 
         return {
             "success": False,

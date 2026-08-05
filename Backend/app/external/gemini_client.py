@@ -11,6 +11,11 @@ class GeminiClient:
 
     def __init__(self):
 
+        print("\n==============================")
+        print("API KEY:", current_app.config["GEMINI_API_KEY"][:15] + "...")
+        print("MODEL:", current_app.config["GEMINI_MODEL"])
+        print("==============================\n")
+
         self.client = genai.Client(
             api_key=current_app.config["GEMINI_API_KEY"]
         )
@@ -49,14 +54,26 @@ class GeminiClient:
                     ),
                 )
 
+                print("\n========== RESPONSE OBJECT ==========")
+                print(response)
+                print("====================================")
+
+                try:
+                    print("Finish Reason:", response.candidates[0].finish_reason)
+                except Exception as e:
+                    print("Couldn't read finish reason:", e)
+
                 return response.text
 
             except Exception as e:
+                import traceback
+
+                print("\n================ GEMINI ERROR ================")
+                traceback.print_exc()
+                print("==============================================\n")
 
                 if attempt == retries - 1:
-                    raise Exception(
-                        f"Gemini Error: {str(e)}"
-                    )
+                    raise
 
                 time.sleep(2)
         

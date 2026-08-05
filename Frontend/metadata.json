@@ -1,0 +1,6 @@
+{
+  "name": "AI Travel Planner & Concierge",
+  "description": "Modern AI-powered agentic travel concierge and smart itinerary generator with interactive maps, budget tracking, weather & crowd insights.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
