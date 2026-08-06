@@ -2,11 +2,58 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import api from '../services/api';
 
 const TripContext = createContext(null);
+const USD_TO_INR = 87;
+const getDestinationImage = (destination = "") => {
+  const city = destination.toLowerCase();
+
+  const images = {
+    tokyo:
+      "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1200&auto=format&fit=crop&q=80",
+
+    "new york":
+      "https://images.unsplash.com/photo-1499092346589-b9b6be3e94b2?w=1200&auto=format&fit=crop&q=80",
+
+    paris:
+      "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1200&auto=format&fit=crop&q=80",
+
+    london:
+      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1200&auto=format&fit=crop&q=80",
+
+    agra:
+      "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1200&auto=format&fit=crop&q=80",
+
+    goa:
+      "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1200&auto=format&fit=crop&q=80",
+
+    dubai:
+      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200&auto=format&fit=crop&q=80",
+
+    sydney:
+      "https://images.unsplash.com/photo-1506973035872-a4ec16b8d6df?w=1200&auto=format&fit=crop&q=80",
+
+    singapore:
+      "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=1200&auto=format&fit=crop&q=80",
+
+    switzerland:
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1200&auto=format&fit=crop&q=80",
+  };
+
+  for (const key in images) {
+    if (city.includes(key)) return images[key];
+  }
+
+  return "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=1200&auto=format&fit=crop&q=80";
+};
 
 // Normalize response from backend into standardized React state trip object
 export function normalizeBackendTrip(resData, formData = {}) {
   // Support both direct object and nested { success: true, data: { preference, budget, route, weather, crowd, travel_companion } }
-  const raw = resData?.data || resData?.trip || resData;
+  const raw =
+    resData?.plan_data ||
+    resData?.data?.plan_data ||
+    resData?.data ||
+    resData?.trip ||
+    resData;
   const pref = raw?.preference || raw?.preferences || {};
   const budgetObj = raw?.budget || raw?.budgets || {};
   const routeObj = raw?.route || raw?.itinerary || {};
@@ -16,11 +63,42 @@ export function normalizeBackendTrip(resData, formData = {}) {
 
   const daysList = routeObj?.days || (Array.isArray(routeObj) ? routeObj : []);
 
-  const dest = pref?.destination || raw?.destination || formData?.destination || 'Tokyo & Kyoto, Japan';
-  const numDays = parseInt(pref?.days || raw?.days || formData?.days || daysList.length || 5, 10);
-  const rawBudgetString = String(pref?.budget || raw?.budget || formData?.budget || '$2,500');
-  const numericBudget = parseInt(rawBudgetString.replace(/[^0-9]/g, ''), 10) || 2500;
-
+  const dest =
+    resData?.destination ||
+    resData?.data?.destination ||
+    raw?.destination ||
+    pref?.destination ||
+    formData?.destination ||
+    "Unknown Destination";
+  const numDays = parseInt(
+    resData?.days ||
+    resData?.data?.days ||
+    raw?.days ||
+    pref?.days ||
+    formData?.days ||
+    daysList.length ||
+    1,
+    10
+  );
+  const rawBudgetString = String(
+    resData?.budget ||
+    resData?.data?.budget ||
+    raw?.budget ||
+    pref?.budget ||
+    formData?.budget ||
+    0
+  );
+  const numericBudget =
+    parseInt(rawBudgetString.replace(/[^0-9]/g, ""), 10) ||
+    budgetObj.total ||
+    budgetObj.estimated_total ||
+    formData?.budget ||
+    0;
+  const currency =
+    resData?.currency ||
+    raw?.currency ||
+    formData?.currency ||
+    "USD";
   const hotelB = budgetObj.hotel || budgetObj.hotel_budget || Math.round(numericBudget * 0.4);
   const foodB = budgetObj.food || budgetObj.food_budget || Math.round(numericBudget * 0.25);
   const transB = budgetObj.transport || budgetObj.transport_budget || Math.round(numericBudget * 0.15);
@@ -64,13 +142,20 @@ export function normalizeBackendTrip(resData, formData = {}) {
           return act.coords;
         }
 
-        return [
-          35.6853 + idx * 0.01,
-          139.6912 + idx * 0.01
-        ];
+        return null;
+
       })(),
-      nearbyHotels: act.nearbyHotels || act.hotels || [],
-      nearbyAttractions: act.nearbyAttractions || act.attractions || []
+      nearbyHotels:
+      act.nearbyHotels ||
+      act.nearby_hotels ||
+      act.hotels ||
+      [],
+
+      nearbyAttractions:
+      act.nearbyAttractions ||
+      act.nearby_places ||
+      act.attractions ||
+      [],
     }))
   }));
 
@@ -106,44 +191,83 @@ export function normalizeBackendTrip(resData, formData = {}) {
   }
 
   // Extract hotels & attractions across days or root
-  const hotels = raw?.hotels || [
-    {
-      name: `${dest.split(',')[0]} Central Hotel & Spa`,
-      address: `101 Main St, ${dest}`,
-      coordinates: [35.6853, 139.6912],
-      price: `$${Math.round(hotelB / numDays)}/night`,
-      rating: 4.8
-    }
-  ];
+ const hotels =
+  raw?.hotels ||
+  itinerary
+    .flatMap(day =>
+      day.activities.flatMap(activity =>
+        (activity.nearbyHotels || []).map(hotel => ({
+          name: hotel.name,
+          address: hotel.address,
+          coordinates: [hotel.latitude, hotel.longitude],
+          price: hotel.price || "N/A",
+          rating: hotel.rating || 4.5
+        }))
+      )
+    );
 
-  const attractions = raw?.attractions || [
-    {
-      name: `${dest.split(',')[0]} Landmark Gardens`,
-      address: `Historic District, ${dest}`,
-      coordinates: [35.7148, 139.7967],
-      distance: '1.5 km'
-    }
-  ];
+const attractions =
+  raw?.attractions ||
+  itinerary
+    .flatMap(day =>
+      day.activities.flatMap(activity =>
+        (activity.nearbyAttractions || []).map(place => ({
+          name: place.name,
+          address: place.address,
+          coordinates: [place.latitude, place.longitude],
+          distance: place.distance || ""
+        }))
+      )
+    );
 
   return {
     id: raw?.id || raw?._id || 'trip_' + Date.now(),
     destination: dest,
-    startDate: pref?.startDate || formData?.startDate || '2025-05-10',
-    endDate: pref?.endDate || formData?.endDate || '2025-05-17',
+    startDate:
+      formData?.startDate ||
+      resData?.created_at?.split("T")[0] ||
+      "Not Available",
+
+    endDate:
+      formData?.endDate ||
+      "Not Available",
     days: numDays,
-    budget: `$${numericBudget.toLocaleString()}`,
+    budget:
+      currency === "INR"
+        ? `₹${numericBudget.toLocaleString()}`
+        : `$${numericBudget.toLocaleString()}`,
     numericBudget,
-    travelStyle: pref?.travelStyle || formData?.travelStyle || 'Cultural & Luxury',
+    travelStyle:
+      resData?.travel_style ||
+      pref?.travelStyle ||
+      pref?.travel_style ||
+      formData?.travelStyle ||
+      'Cultural & Luxury',
     travelers: pref?.travelers || formData?.travelers || 'Couple (2)',
     status: 'Saved',
-    coverImage: raw?.coverImage || 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=800&auto=format&fit=crop&q=80',
+    coverImage: getDestinationImage(dest),
     tripSummary: {
       destination: dest,
-      budget: `$${numericBudget.toLocaleString()}`,
-      travelStyle: pref?.travelStyle || formData?.travelStyle || 'Cultural & Luxury',
+      budget:
+        currency === "INR"
+          ? `₹${numericBudget.toLocaleString()}`
+          : `$${numericBudget.toLocaleString()}`,
+      travelStyle:
+        resData?.travel_style ||
+        pref?.travelStyle ||
+        pref?.travel_style ||
+        formData?.travelStyle ||
+        'Cultural & Luxury',
       travelerCategory: pref?.travelers || formData?.travelers || 'Couple',
       recommendedPace: 'Optimized Pace',
-      estimatedCost: budgetObj.total || budgetObj.estimated_total || `$${(numericBudget * 0.95).toFixed(0)}`
+      estimatedCost:
+        budgetObj.total ||
+        budgetObj.estimated_total ||
+        (
+          currency === "INR"
+            ? `₹${(numericBudget * 0.95).toFixed(0)}`
+            : `$${(numericBudget * 0.95).toFixed(0)}`
+        )
     },
     budgets: {
       hotel: hotelB,
@@ -151,19 +275,28 @@ export function normalizeBackendTrip(resData, formData = {}) {
       transport: transB,
       activity: actB,
       miscellaneous: miscB,
-      total: budgetObj.total || budgetObj.estimated_total || `$${numericBudget.toLocaleString()}`
-    },
+    total:
+      budgetObj.total ||
+      budgetObj.estimated_total ||
+      (
+        currency === "INR"
+        ? `₹${numericBudget.toLocaleString()}`
+        : `$${numericBudget.toLocaleString()}`), 
+         },
     weather: {
-      temperature: weatherObj.temperature || weatherObj.temp || '22°C / 72°F',
-      condition: weatherObj.condition || weatherObj.sky || 'Partly Cloudy & Pleasant',
-      warnings: weatherObj.warnings || weatherObj.warning || 'Moderate UV index; sunscreen advised',
-      activitySuitability: weatherObj.activitySuitable || weatherObj.activity_suitable || 'Ideal for outdoor walking and tours'
+      temperature: weatherObj[0]?.temperature || 'N/A',
+      condition: weatherObj[0]?.condition || 'N/A',
+      warnings: weatherObj[0]?.warning || '',
+      activitySuitability: weatherObj[0]?.activity_suitable
+        ? 'Suitable for outdoor activities'
+        : 'Not suitable'
     },
     crowdInfo: {
-      level: crowdObj.level || crowdObj.crowd_level || 'Moderate',
-      bestVisitTime: crowdObj.bestVisitTime || crowdObj.best_visit_time || '08:30 AM - 11:00 AM',
-      congestionRisk: crowdObj.congestionRisk || crowdObj.congestion_risk || 'Low risk during morning hours'
+      level: crowdObj[0]?.crowd_level || 'Unknown',
+      bestVisitTime: crowdObj[0]?.best_visit_time || '',
+      congestionRisk: crowdObj[0]?.congestion_risk || ''
     },
+    
     companionTips: {
       packing: companionObj.packing || ['Comfortable walking footwear', 'Portable charger', 'Weather-appropriate jacket'],
       safety: companionObj.safety || ['Keep digital copies of documents', 'Emergency numbers saved'],
@@ -193,9 +326,11 @@ export const TripProvider = ({ children }) => {
     try {
       const response = await api.get('/trips');
       const rawList = response.data?.trips || response.data?.data || response.data || [];
+      console.log("Trips from Backend:", rawList);
       const normalizedList = Array.isArray(rawList)
         ? rawList.map((item) => normalizeBackendTrip(item))
         : [];
+        console.log("Normalized Trips:", normalizedList);
       setSavedTrips(normalizedList);
       if (normalizedList.length > 0 && !activeTrip) {
         setActiveTrip(normalizedList[0]);
@@ -239,7 +374,8 @@ export const TripProvider = ({ children }) => {
       const payload = {
         destination: formData.destination,
         days: parseInt(formData.days),
-        budget: parseInt(String(formData.budget).replace(/[^0-9]/g, '')),
+        budget: parseInt(formData.budget),
+        currency: formData.currency,
         group_type: formData.travelers,
         travel_style: formData.travelStyle,
         season: formData.season,
@@ -255,10 +391,20 @@ export const TripProvider = ({ children }) => {
 
       console.log("✅ FULL RESPONSE:", response);
       console.log("✅ RESPONSE DATA:", response.data);
+      console.log("RAW ROUTE:", response.data.data.route.days);
 
       const generated = normalizeBackendTrip(response.data, formData);
 
-      console.log("✅ GENERATED TRIP:", generated);
+      console.log("NORMALIZED ITINERARY:", generated.itinerary);
+
+      generated.itinerary.forEach(day => {
+        day.activities.forEach(activity => {
+          console.log(
+            activity.name,
+            activity.coordinates
+          );
+        });
+      });
 
       setActiveTrip(generated);
 

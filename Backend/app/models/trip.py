@@ -19,6 +19,11 @@ class Trip(BaseModel):
         db.Float,
         nullable=False
     )
+    currency = db.Column(
+        db.String(10),
+        default="USD",
+        nullable=False
+    )
 
     days = db.Column(
         db.Integer,
@@ -32,6 +37,10 @@ class Trip(BaseModel):
 
     travel_style = db.Column(
         db.String(100),
+        nullable=True
+    )
+    plan_data = db.Column(
+        db.JSON,
         nullable=True
     )
 
@@ -51,9 +60,11 @@ class Trip(BaseModel):
             "id": str(self.id),
             "destination": self.destination,
             "budget": self.budget,
+            "currency": self.currency,
             "days": self.days,
             "interests": self.interests,
             "travel_style": self.travel_style,
+            "plan_data": self.plan_data,
             "status": self.status,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat()

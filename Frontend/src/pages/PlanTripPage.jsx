@@ -5,7 +5,6 @@ import {
   Sparkles, 
   MapPin, 
   Calendar, 
-  DollarSign, 
   Compass, 
   Users, 
   Hotel, 
@@ -31,7 +30,8 @@ export default function PlanTripPage() {
 
   const [destination, setDestination] = useState('Tokyo & Kyoto, Japan');
   const [days, setDays] = useState('7');
-  const [budget, setBudget] = useState('$2,800');
+  const [currency, setCurrency] = useState("USD");
+  const [budget, setBudget] = useState("2800");
   const [travelStyle, setTravelStyle] = useState('Cultural & Luxury');
   const [interests, setInterests] = useState('Historical Temples, Culinary Fine Dining, Cherry Blossom Gardens, Anime & Tech');
   const [season, setSeason] = useState('Spring (Cherry Blossom)');
@@ -50,6 +50,7 @@ export default function PlanTripPage() {
       destination,
       days,
       budget,
+      currency,
       travelStyle,
       interests,
       season,
@@ -139,14 +140,33 @@ export default function PlanTripPage() {
                   required
                 />
 
-                <Input
-                  label="Target Budget"
-                  icon={DollarSign}
-                  value={budget}
-                  onChange={(e) => setBudget(e.target.value)}
-                  placeholder="e.g., $2,500"
-                  required
-                />
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-slate-700">
+                    Target Budget
+                  </label>
+
+                  <div className="flex overflow-hidden rounded-xl border border-slate-300 bg-white focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-600">
+
+                    <select
+                      value={currency}
+                      onChange={(e) => setCurrency(e.target.value)}
+                      className="w-24 bg-slate-100 border-r border-slate-300 px-3 font-semibold outline-none"
+                    >
+                      <option value="USD">USD</option>
+                      <option value="INR">INR</option>
+                    </select>
+
+                    <input
+                      type="number"
+                      value={budget}
+                      onChange={(e) => setBudget(e.target.value)}
+                      placeholder="Enter budget"
+                      className="flex-1 px-4 py-3 outline-none text-sm"
+                      required
+                    />
+
+                  </div>
+                </div>
 
                 <Input
                   label="Number of Days"

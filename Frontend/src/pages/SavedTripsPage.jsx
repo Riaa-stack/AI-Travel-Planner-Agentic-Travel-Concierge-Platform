@@ -98,7 +98,25 @@ export default function SavedTripsPage() {
                         {trip.days} Days
                       </span>
                       <span className="absolute top-3 right-3 bg-blue-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-xs">
-                        {trip.budget}
+                        <>
+                          <div className="font-bold text-white">
+                            {new Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                              maximumFractionDigits: 0,
+                            }).format(trip.numericBudget)}
+                          </div>
+
+                          <div className="text-[10px] text-blue-100">
+                            (
+                            {new Intl.NumberFormat("en-IN", {
+                              style: "currency",
+                              currency: "INR",
+                              maximumFractionDigits: 0,
+                            }).format(trip.numericBudget * 87)}
+                            )
+                          </div>
+                        </>
                       </span>
                     </div>
 

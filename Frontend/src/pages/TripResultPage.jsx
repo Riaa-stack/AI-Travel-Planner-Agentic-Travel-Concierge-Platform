@@ -70,6 +70,38 @@ export default function TripResultPage() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+  const handleShowOnMap = (hotel) => {
+    if (!hotel) return;
+
+    if (hotel.latitude && hotel.longitude) {
+      window.open(
+        `https://www.google.com/maps/search/?api=1&query=${hotel.latitude},${hotel.longitude}`,
+        "_blank"
+      );
+    } else if (hotel.address) {
+      window.open(
+        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotel.address)}`,
+        "_blank"
+      );
+    }
+  };
+
+  const handleGetDirections = (hotel) => {
+    if (!hotel) return;
+
+    if (hotel.latitude && hotel.longitude) {
+      window.open(
+        `https://www.google.com/maps/dir/?api=1&destination=${hotel.latitude},${hotel.longitude}`,
+        "_blank"
+      );
+    } else if (hotel.address) {
+      window.open(
+        `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(hotel.address)}`,
+        "_blank"
+      );
+    }
+  };
+  
 
   return (
     <DashboardLayout>
@@ -185,7 +217,12 @@ export default function TripResultPage() {
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {activeTrip.hotels.map((hotel, idx) => (
-                <HotelCard key={idx} hotel={hotel} />
+                <HotelCard
+                  key={idx}
+                  hotel={hotel}
+                  onShowOnMap={handleShowOnMap}
+                  onGetDirections={handleGetDirections}
+                />
               ))}
             </div>
           </div>

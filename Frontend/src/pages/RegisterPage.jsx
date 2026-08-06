@@ -55,7 +55,7 @@ export default function RegisterPage() {
                   <Sparkles className="w-3.5 h-3.5" /> Start Exploring
                 </div>
                 <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Create Free Account</h2>
-                <p className="text-xs text-slate-500">Join VoyageAI & unlock agentic trip planning.</p>
+                <p className="text-xs text-slate-500">Join JetSetAI & unlock agentic trip planning.</p>
               </div>
 
               {errorMsg && (

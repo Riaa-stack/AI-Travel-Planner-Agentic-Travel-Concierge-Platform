@@ -31,21 +31,13 @@ export default function DashboardPage() {
     navigate('/trip-result');
   };
 
-  const currentDisplayTrip = activeTrip || savedTrips[0] || {
-    destination: 'Kyoto, Japan',
-    startDate: '2025-11-12',
-    endDate: '2025-11-18',
-    travelers: '2 Travelers',
-    budget: '$3,450',
-    weather: { temperature: '16°C ☀️' },
-    travelStyle: 'Cultural'
-  };
+  const currentDisplayTrip = activeTrip || savedTrips[0];
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
         
-        {/* Top Active Trip Summary + AI Concierge Card */}
+      {currentDisplayTrip && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -128,7 +120,9 @@ export default function DashboardPage() {
                 </span>
               </div>
               <p className="text-xs leading-relaxed text-slate-300">
-                "I've noticed a local cultural event on your destination timeline. I've adjusted evening recommendations for optimal enjoyment."
+                {currentDisplayTrip
+                  ? `Monitoring ${currentDisplayTrip.destination} for weather, crowds and route updates.`
+                  : "Create your first itinerary to activate the AI Concierge."}
               </p>
             </div>
             <button
@@ -139,6 +133,7 @@ export default function DashboardPage() {
             </button>
           </div>
         </motion.div>
+      )}
 
         {/* Statistics Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -155,7 +150,7 @@ export default function DashboardPage() {
               <span className="text-xs font-semibold text-slate-400">Active Upcoming</span>
               <Plane className="w-4 h-4 text-emerald-600" />
             </div>
-            <p className="text-xl font-extrabold text-[#0F172A]">{savedTrips.length || 1}</p>
+            <p className="text-xl font-extrabold text-[#0F172A]">{savedTrips.length}</p>
           </Card>
 
           <Card padding="p-4" className="border-slate-200 space-y-1">
@@ -164,7 +159,7 @@ export default function DashboardPage() {
               <Calendar className="w-4 h-4 text-amber-500" />
             </div>
             <p className="text-xl font-extrabold text-[#0F172A]">
-              {savedTrips.reduce((acc, t) => acc + (t.days || 0), 0) || 14}
+              {savedTrips.reduce((acc, t) => acc + (t.days || 0), 0)}
             </p>
           </Card>
 
@@ -174,7 +169,11 @@ export default function DashboardPage() {
               <DollarSign className="w-4 h-4 text-purple-600" />
             </div>
             <p className="text-xl font-extrabold text-[#0F172A]">
-              ${savedTrips.reduce((acc, t) => acc + (t.numericBudget || 2000), 0).toLocaleString()}
+              {savedTrips.length === 0
+                ? "₹0"
+                : `₹${savedTrips
+                    .reduce((acc, t) => acc + (t.numericBudget || 0), 0)
+                    .toLocaleString()}`}
             </p>
           </Card>
         </div>

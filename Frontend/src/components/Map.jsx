@@ -65,6 +65,8 @@ export default function Map({
   const routePoints = [];
   itinerary.forEach((day) => {
     day.activities?.forEach((act) => {
+      console.log("ACTIVITY COORDINATES:", act.coordinates);
+      console.log("COORDINATES =", act.coordinates);
       if (
         Array.isArray(act.coordinates) &&
         act.coordinates.length === 2 &&
@@ -77,12 +79,21 @@ export default function Map({
   });
 
   // Default center if no coordinates
+  // Default center if no coordinates
   const defaultCenter =
-  routePoints.length > 0
-    ? routePoints[0]
-    : Array.isArray(hotels[0]?.coordinates)
-      ? hotels[0].coordinates
-      : [35.6762, 139.6503];
+    routePoints.length > 0
+      ? routePoints[0]
+      : Array.isArray(hotels[0]?.coordinates)
+        ? hotels[0].coordinates
+        : Array.isArray(attractions[0]?.coordinates)
+          ? attractions[0].coordinates
+          : [20.5937, 78.9629];
+
+  console.log("ROUTE POINTS:", routePoints);
+  console.log("HOTELS:", hotels);
+  console.log("ATTRACTIONS:", attractions);
+  console.log("DEFAULT CENTER:", defaultCenter);
+
 
   const tileUrls = {
     standard: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -133,7 +144,7 @@ export default function Map({
         <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Hotels</span>
         <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-orange-500"></span> Tourist Attractions</span>
       </div>
-
+      
       <MapContainer
         center={defaultCenter}
         zoom={12}

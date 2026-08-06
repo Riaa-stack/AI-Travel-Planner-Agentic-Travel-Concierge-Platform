@@ -55,9 +55,9 @@ class GeoapifyAPI:
 
         params = {
             "categories": "tourism.attraction",
-            "filter": f"circle:{longitude},{latitude},{radius}",
+            "filter": f"circle:{longitude},{latitude},2000",
             "bias": f"proximity:{longitude},{latitude}",
-            "limit": 20,
+            "limit": 5,
             "apiKey": self.api_key
         }
 
@@ -95,9 +95,9 @@ class GeoapifyAPI:
 
         params = {
             "categories": "accommodation.hotel",
-            "filter": f"circle:{longitude},{latitude},{radius}",
+            "filter": f"circle:{longitude},{latitude},2000",
             "bias": f"proximity:{longitude},{latitude}",
-            "limit": 20,
+            "limit": 5,
             "apiKey": self.api_key
         }
 

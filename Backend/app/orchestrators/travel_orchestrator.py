@@ -6,7 +6,7 @@ from app.agents.crowd_agent import CrowdAgent
 from app.agents.travel_companion_agent import TravelCompanionAgent
 from app.agents.replanning_agent import ReplanningAgent
 from app.external.geoapify_api import GeoapifyAPI
-
+from app.external.weather_api import WeatherAPI
 
 class TravelOrchestrator:
 
@@ -16,6 +16,7 @@ class TravelOrchestrator:
         self.budget_agent = BudgetAgent()
         self.route_agent = RouteAgent()
         self.weather_agent = WeatherAgent()
+        self.weather_api = WeatherAPI()
         self.crowd_agent = CrowdAgent()
         self.travel_companion_agent = TravelCompanionAgent()
         self.replanning_agent = ReplanningAgent()
@@ -31,25 +32,13 @@ class TravelOrchestrator:
         print("\n==============================")
         print("🚀 Starting BudgetAgent")
         print("==============================")
-        # budget = self.budget_agent.execute(
-        #     {
-        #         **user_input,
-        #         **preference
-        #     }
-        # )["data"]
-        budget = {
-            "hotel_budget": 10000,
-            "food_budget": 5000,
-            "transport_budget": 3000,
-            "activity_budget": 9000,
-            "misc_budget": 3000,
-            "estimated_total": 30000,
-            "budget_status": "Allocated"
-        }
-
-        print("✅ Dummy Budget Loaded")
-        print("✅ BudgetAgent Finished")
-
+        budget = self.budget_agent.execute(
+            {
+                **user_input,
+                **preference
+            }
+        )["data"]
+        
         print("\n==============================")
         print("🚀 Starting RouteAgent")
         print("==============================")
@@ -87,44 +76,70 @@ class TravelOrchestrator:
 
         for day in route_days:
             for activity in day["activities"]:
-                location = activity["location"]
-            try:
-                coordinates = geoapify.geocode(location)
+                location = f"{activity['location']}, {user_input['destination']}"
+                try:
+                    print("=" * 60)
+                    print("Searching Geoapify:", location)
 
-                activity["coordinates"] = coordinates
+                    coordinates = geoapify.geocode(location)
 
-                activity["nearby_hotels"] = geoapify.search_hotels(
-                    coordinates["latitude"],
-                    coordinates["longitude"]
-                )
+                    print("Coordinates Returned:", coordinates)
 
-                activity["nearby_places"] = geoapify.search_places(
-                    coordinates["latitude"],
-                    coordinates["longitude"]
-                )
+                    activity["coordinates"] = coordinates
+                    print("=" * 60)
 
-            except Exception as e:
-                print(f"Geoapify Error for {location}: {e}")
+                    if coordinates:
+                        activity["nearby_hotels"] = geoapify.search_hotels(
+                            coordinates["latitude"],
+                            coordinates["longitude"]
+                        )
 
-                activity["coordinates"] = None
-                activity["nearby_hotels"] = []
-                activity["nearby_places"] = []
+                        activity["nearby_places"] = geoapify.search_places(
+                            coordinates["latitude"],
+                            coordinates["longitude"]
+                        )
+                    else:
+                        activity["nearby_hotels"] = []
+                        activity["nearby_places"] = []
+
+                except Exception as e:
+                    print(f"Geoapify Error for {location}: {e}")
+
+                    activity["coordinates"] = None
+                    activity["nearby_hotels"] = []
+                    activity["nearby_places"] = []
 
         print("✅ RouteAgent Finished")
 
         print("\n==============================")
-        print("🚀 Starting WeatherAgent")
+        print("🚀 Starting OpenWeather API")
         print("==============================")
 
-        weather = self.weather_agent.execute(
-            {
-                "destination": user_input["destination"],
-                "season": user_input["season"],
-                "days": route["days"]
-            }
-        )["data"]
+        forecast = self.weather_api.get_forecast(
+            user_input["destination"]
+        )
 
-        print("✅ WeatherAgent Finished")
+        weather = {
+            "weather": []
+        }
+
+        forecast_list = forecast["list"]
+
+        for day in range(user_input["days"]):
+
+            index = min(day * 8, len(forecast_list) - 1)
+
+            item = forecast_list[index]
+
+            weather["weather"].append({
+                "day": day + 1,
+                "condition": item["weather"][0]["main"],
+                "temperature": f'{round(item["main"]["temp"])}°C',
+                "activity_suitable": item["weather"][0]["main"] not in ["Rain", "Thunderstorm"],
+                "warning": "Carry an umbrella." if item["weather"][0]["main"] == "Rain" else ""
+            })
+
+        print("✅ OpenWeather API Finished")
 
         print("\n==============================")
         print("🚀 Starting CrowdAgent")

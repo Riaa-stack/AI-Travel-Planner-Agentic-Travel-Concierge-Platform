@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-
+from app.models.trip import Trip
+from app.extensions import db
 from app.orchestrators.travel_orchestrator import TravelOrchestrator
 from app.schemas.trip_schema import TripSchema
 from app.services.trip_service import TripService
@@ -135,6 +136,24 @@ def plan_trip():
         orchestrator = TravelOrchestrator()
 
         result = orchestrator.generate_trip(data)
+        user_id = get_jwt_identity()
+
+        trip = Trip(
+            user_id=user_id,
+            destination=data["destination"],
+            budget=data["budget"],
+            currency=data.get("currency", "USD"),
+            days=data["days"],
+            interests=data["interests"],
+            travel_style=result["preference"]["travel_style"],
+            plan_data=result,
+            status="planned"
+        )
+
+        db.session.add(trip)
+        db.session.commit()
+
+        result["id"] = str(trip.id)
 
         return {
             "success": True,

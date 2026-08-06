@@ -47,11 +47,15 @@ class BaseAgent(ABC):
 
         for attempt in range(3):
 
+            print(f"\n🚀 Calling Gemini from {self.__class__.__name__}...")
+
             response = self.client.generate(
                 system_prompt=self.prompt,
                 user_prompt=user_prompt,
                 temperature=temperature
             )
+
+            print(f"✅ Gemini returned for {self.__class__.__name__}")
 
             print(f"\n========== {self.__class__.__name__} ==========")
             print(response)

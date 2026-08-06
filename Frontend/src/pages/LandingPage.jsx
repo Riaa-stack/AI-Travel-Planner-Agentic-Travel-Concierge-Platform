@@ -86,7 +86,7 @@ export default function LandingPage() {
       name: 'Sophia Chen',
       role: 'Luxury Travel Journalist',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-      comment: 'VoyageAI planned our 10-day Kyoto & Tokyo expedition flawlessly. The crowd radar saved us hours at Senso-ji!',
+      comment: 'JetSetAI planned our 10-day Kyoto & Tokyo expedition flawlessly. The crowd radar saved us hours at Senso-ji!',
       rating: 5
     },
     {
@@ -267,7 +267,7 @@ export default function LandingPage() {
               3 Simple Steps
             </span>
             <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              How VoyageAI Crafts Your Dream Trip
+              How JetSetAI Crafts Your Dream Trip
             </h2>
           </div>
 

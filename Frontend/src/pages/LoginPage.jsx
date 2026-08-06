@@ -49,7 +49,7 @@ export default function LoginPage() {
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-[11px] font-bold">
                   <Sparkles className="w-3.5 h-3.5" /> Welcome Back
                 </div>
-                <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Login To VoyageAI</h2>
+                <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Login To JetSetAI</h2>
                 <p className="text-xs text-slate-500">Access your saved AI itineraries and live concierge.</p>
               </div>
 

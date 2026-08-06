@@ -40,9 +40,10 @@ class GeminiClient:
             ]
 
         for attempt in range(retries):
+            print(f"Gemini attempt {attempt + 1}/{retries}")
 
             try:
-
+                print("Sending request to Gemini...")
                 response = self.client.models.generate_content(
                     model=self.model,
                     contents=user_prompt,
@@ -53,7 +54,7 @@ class GeminiClient:
                         response_mime_type="application/json",
                     ),
                 )
-
+                print("Received response from Gemini")
                 print("\n========== RESPONSE OBJECT ==========")
                 print(response)
                 print("====================================")
