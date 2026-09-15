@@ -77,60 +77,63 @@ export default function PlanTripPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6 max-w-4xl mx-auto">
+      <div className="space-y-8 max-w-4xl mx-auto">
         
         {/* Header */}
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-[11px] font-bold">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-pulse" /> Agentic Travel Concierge
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-indigo-600 text-white text-xs font-black border-2 border-slate-900 shadow-[2px_2px_0px_#0F172A]">
+            <Sparkles className="w-4 h-4 text-amber-300 animate-spin" /> Agentic Travel Concierge
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
             Plan Your Custom AI Trip
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 font-normal">
+          <p className="text-xs sm:text-sm text-slate-600 font-bold">
             Configure your destination, duration, budget, and travel preferences to generate a complete travel blueprint.
           </p>
         </div>
 
         {/* Destination Quick Presets */}
-        <div className="space-y-2">
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-400">Popular Destinations</p>
+        <div className="space-y-3">
+          <p className="text-xs font-black uppercase tracking-widest text-slate-500">Popular Destinations</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            {DESTINATION_PRESETS.map((preset, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => handleSelectPreset(preset)}
-                className={`p-2 rounded-xl border text-left transition-all ${
-                  destination.toLowerCase().includes(preset.name.split(',')[0].toLowerCase())
-                    ? 'border-blue-600 bg-blue-50/80 ring-2 ring-blue-500/20'
-                    : 'border-slate-200 bg-white hover:border-slate-300'
-                }`}
-              >
-                <img
-                  src={preset.image}
-                  alt={preset.name}
-                  className="w-full h-14 object-cover rounded-lg mb-1.5"
-                  referrerPolicy="no-referrer"
-                />
-                <p className="text-xs font-bold text-slate-800 truncate">{preset.name.split(',')[0]}</p>
-                <p className="text-[10px] text-slate-400">{preset.country}</p>
-              </button>
-            ))}
+            {DESTINATION_PRESETS.map((preset, idx) => {
+              const isSelected = destination.toLowerCase().includes(preset.name.split(',')[0].toLowerCase());
+              return (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => handleSelectPreset(preset)}
+                  className={`p-2.5 rounded-2xl border-2 text-left transition-all ${
+                    isSelected
+                      ? 'border-indigo-600 bg-indigo-50 shadow-[4px_4px_0px_#4F46E5] -translate-y-1'
+                      : 'border-slate-900 bg-white hover:bg-slate-50 shadow-[2px_2px_0px_#0F172A]'
+                  }`}
+                >
+                  <img
+                    src={preset.image}
+                    alt={preset.name}
+                    className="w-full h-16 object-cover rounded-xl mb-2 border border-slate-900"
+                    referrerPolicy="no-referrer"
+                  />
+                  <p className="text-xs font-black text-slate-900 truncate">{preset.name.split(',')[0]}</p>
+                  <p className="text-[10px] font-bold text-slate-500">{preset.country}</p>
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* Main Planner Form */}
-        <Card className="p-6 sm:p-8 shadow-xl border-slate-200/80 bg-white">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <Card className="p-6 sm:p-8 shadow-[6px_6px_0px_#0F172A] border-2 border-slate-900 bg-white rounded-3xl">
+          <form onSubmit={handleSubmit} className="space-y-8">
             
             {/* Form Section 1: Basic Trip Parameters */}
-            <div className="space-y-4">
-              <h3 className="text-xs font-extrabold uppercase tracking-widest text-blue-600 border-b border-slate-100 pb-2">
+            <div className="space-y-5">
+              <div className="inline-block px-4 py-1.5 rounded-2xl bg-indigo-100 border-2 border-indigo-600 text-indigo-950 text-xs font-black shadow-[2px_2px_0px_#4F46E5]">
                 1. Basic Trip Parameters
-              </h3>
+              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <Input
                   label="Destination City or Country"
                   icon={MapPin}
@@ -140,20 +143,20 @@ export default function PlanTripPage() {
                   required
                 />
 
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-slate-700">
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-slate-800">
                     Target Budget
                   </label>
 
-                  <div className="flex overflow-hidden rounded-xl border border-slate-300 bg-white focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-600">
+                  <div className="flex overflow-hidden rounded-2xl border-2 border-slate-900 bg-[#F8FAFC] shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:bg-white">
 
                     <select
                       value={currency}
                       onChange={(e) => setCurrency(e.target.value)}
-                      className="w-24 bg-slate-100 border-r border-slate-300 px-3 font-semibold outline-none"
+                      className="w-24 bg-slate-200 border-r-2 border-slate-900 px-3 font-extrabold text-xs outline-none cursor-pointer"
                     >
-                      <option value="USD">USD</option>
-                      <option value="INR">INR</option>
+                      <option value="USD">USD ($)</option>
+                      <option value="INR">INR (₹)</option>
                     </select>
 
                     <input
@@ -161,7 +164,7 @@ export default function PlanTripPage() {
                       value={budget}
                       onChange={(e) => setBudget(e.target.value)}
                       placeholder="Enter budget"
-                      className="flex-1 px-4 py-3 outline-none text-sm"
+                      className="flex-1 px-4 py-2.5 outline-none text-xs sm:text-sm font-bold bg-transparent text-slate-900"
                       required
                     />
 
@@ -194,7 +197,7 @@ export default function PlanTripPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <Input
                   label="Start Date"
                   type="date"
@@ -211,12 +214,12 @@ export default function PlanTripPage() {
             </div>
 
             {/* Form Section 2: Style & Preferences */}
-            <div className="space-y-4 pt-2">
-              <h3 className="text-xs font-extrabold uppercase tracking-widest text-sky-600 border-b border-slate-100 pb-2">
+            <div className="space-y-5 pt-4 border-t-2 border-slate-100">
+              <div className="inline-block px-4 py-1.5 rounded-2xl bg-sky-100 border-2 border-sky-600 text-sky-950 text-xs font-black shadow-[2px_2px_0px_#0284C7]">
                 2. Style & Atmosphere Preferences
-              </h3>
+              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <Dropdown
                   label="Travel Style"
                   icon={Compass}
@@ -281,27 +284,27 @@ export default function PlanTripPage() {
               />
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-700">Special Requirements or Notes</label>
+                <label className="block text-xs font-bold text-slate-800">Special Requirements or Notes</label>
                 <div className="relative">
                   <textarea
                     rows={3}
                     value={specialReqs}
                     onChange={(e) => setSpecialReqs(e.target.value)}
                     placeholder="e.g., Vegetarian options, wheelchair accessible paths, early morning starts..."
-                    className="w-full text-xs sm:text-sm bg-white border border-slate-300 rounded-xl p-3 text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                    className="w-full text-xs sm:text-sm bg-[#F8FAFC] border-2 border-slate-900 rounded-2xl p-3 text-slate-900 font-medium shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all"
                   />
                 </div>
               </div>
             </div>
 
             {/* Submit Action */}
-            <div className="pt-4 border-t border-slate-100">
+            <div className="pt-4 border-t-2 border-slate-100">
               <Button
                 type="submit"
                 fullWidth
                 size="lg"
                 icon={Sparkles}
-                className="shadow-lg shadow-blue-500/25 hover:scale-[1.01]"
+                className="py-3.5 text-base shadow-[4px_4px_0px_#0F172A]"
               >
                 Generate Custom AI Itinerary
               </Button>

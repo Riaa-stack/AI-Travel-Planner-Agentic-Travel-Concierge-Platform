@@ -30,9 +30,9 @@ export default function Dropdown({
           id={dropdownId}
           value={value}
           onChange={onChange}
-          className={`w-full text-xs sm:text-sm bg-white border border-slate-300 rounded-xl ${
+          className={`w-full text-xs sm:text-sm bg-[#F8FAFC] border-2 border-slate-900 rounded-2xl ${
             Icon ? 'pl-10' : 'pl-3.5'
-          } pr-10 py-2.5 text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all appearance-none cursor-pointer ${className}`}
+          } pr-10 py-2.5 text-slate-900 font-medium shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/20 transition-all appearance-none cursor-pointer ${className}`}
           {...props}
         >
           {options.map((opt, idx) => {
@@ -46,7 +46,7 @@ export default function Dropdown({
             );
           })}
         </select>
-        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+        <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-700">
           <ChevronDown className="w-4 h-4" />
         </div>
       </div>

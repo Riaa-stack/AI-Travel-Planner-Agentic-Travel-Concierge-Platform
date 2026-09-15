@@ -21,15 +21,15 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-200 min-h-[calc(100vh-4rem)] p-4 hidden md:flex flex-col justify-between shrink-0">
+    <aside className="w-64 bg-[#F4F1EA] border-2 border-slate-900 rounded-3xl shadow-[4px_4px_0px_#0F172A] p-4 hidden md:flex flex-col justify-between shrink-0 my-2">
       <div className="space-y-6">
         
         {/* Navigation Section */}
         <div>
-          <div className="px-3 text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3">
-            Navigation
+          <div className="px-3 text-[11px] font-black uppercase tracking-widest text-slate-500 mb-3">
+            Concierge Navigation
           </div>
-          <nav className="space-y-1">
+          <nav className="space-y-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -37,19 +37,19 @@ export default function Sidebar() {
                   key={item.path}
                   to={item.path}
                   className={({ isActive }) =>
-                    `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                    `flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-extrabold transition-all border-2 ${
                       isActive
-                        ? 'bg-slate-100 text-[#2563EB] shadow-xs'
-                        : 'text-slate-500 hover:text-[#0F172A] hover:bg-slate-50'
+                        ? 'bg-blue-600 text-white border-slate-900 shadow-[3px_3px_0px_#0F172A]'
+                        : 'bg-white/80 text-slate-700 border-transparent hover:border-slate-900 hover:bg-white hover:shadow-[2px_2px_0px_#0F172A]'
                     }`
                   }
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className="w-4 h-4 opacity-80" />
+                    <Icon className="w-4 h-4" />
                     <span>{item.label}</span>
                   </div>
                   {item.badge && (
-                    <span className="bg-[#2563EB]/10 text-[#2563EB] font-bold text-[9px] px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    <span className="bg-amber-400 text-slate-900 font-black text-[9px] px-2 py-0.5 rounded-full border border-slate-900 shadow-[1px_1px_0px_#0F172A]">
                       {item.badge}
                     </span>
                   )}
@@ -60,17 +60,17 @@ export default function Sidebar() {
         </div>
 
         {/* AI Concierge Live Box */}
-        <div className="bg-[#0F172A] p-4 rounded-2xl text-white shadow-lg space-y-3">
+        <div className="bg-[#F3E8FF] border-2 border-purple-800 p-4 rounded-2xl text-purple-950 shadow-[3px_3px_0px_#6B21A8] space-y-3">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-[#38BDF8] rounded-full animate-pulse" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-[#38BDF8]">
+            <div className="w-2.5 h-2.5 bg-purple-600 rounded-full animate-ping" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-purple-800">
               AI Concierge Live
             </span>
           </div>
-          <p className="text-xs text-slate-300 leading-relaxed font-normal">
-            "Monitoring weather & crowds for your upcoming trips. Routes auto-optimized."
+          <p className="text-xs leading-relaxed font-bold text-purple-900">
+            "Monitoring weather &amp; crowds for your upcoming trips. Routes auto-optimized."
           </p>
-          <button className="w-full py-2 bg-white/10 hover:bg-white/20 transition-colors rounded-lg text-xs font-semibold text-white">
+          <button className="w-full py-1.5 bg-purple-800 hover:bg-purple-900 transition-colors rounded-xl text-xs font-extrabold text-white border border-purple-950 shadow-[2px_2px_0px_#3B0764]">
             Concierge Active
           </button>
         </div>
@@ -78,11 +78,11 @@ export default function Sidebar() {
       </div>
 
       {/* Pro Account Footer */}
-      <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-        <div className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Pro Account</div>
-        <div className="text-xs font-bold text-[#0F172A]">{user?.name || 'Explorer'}</div>
-        <div className="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
-          <div className="bg-[#2563EB] w-3/4 h-1 rounded-full" />
+      <div className="p-3 bg-white border-2 border-slate-900 rounded-2xl shadow-[2px_2px_0px_#0F172A] space-y-2">
+        <div className="text-[10px] text-slate-500 uppercase font-black tracking-wider">Pro Account</div>
+        <div className="text-xs font-black text-slate-900">{user?.name || 'Explorer'}</div>
+        <div className="w-full bg-slate-100 border border-slate-900 h-2 rounded-full overflow-hidden">
+          <div className="bg-emerald-500 w-3/4 h-full rounded-full" />
         </div>
       </div>
     </aside>

@@ -12,29 +12,29 @@ export default function TripSummary({ summary = {}, days = 5 }) {
   ];
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
-      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+    <div className="bg-[#FEF3C7] border-2 border-amber-800 rounded-3xl p-6 shadow-[4px_4px_0px_#B45309] space-y-5">
+      <div className="flex items-center justify-between border-b-2 border-amber-300 pb-4">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Agentic Trip Blueprint</span>
-          <p className="text-lg font-bold text-[#0F172A]">{summary.destination || 'Custom Journey'}</p>
+          <span className="text-[10px] font-black uppercase tracking-widest text-amber-800">Agentic Trip Blueprint</span>
+          <p className="text-xl sm:text-2xl font-black text-amber-950">{summary.destination || 'Custom Journey'}</p>
         </div>
-        <span className="bg-[#2563EB] text-white font-bold text-xs px-3 py-1 rounded-full shadow-xs">
+        <span className="bg-amber-800 text-white font-black text-xs px-3.5 py-1.5 rounded-2xl border border-amber-950 shadow-[2px_2px_0px_#B45309]">
           {days} Days Schedule
         </span>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5">
         {items.map((item, idx) => {
           const Icon = item.icon;
           return (
-            <div key={idx} className="p-3 bg-slate-50 border border-slate-100 rounded-xl space-y-1">
+            <div key={idx} className="p-3.5 bg-white border-2 border-amber-800 rounded-2xl shadow-[2px_2px_0px_#B45309] space-y-1">
               <div className="flex items-center gap-1.5">
-                <div className={`p-1 rounded-md ${item.color}`}>
+                <div className={`p-1 rounded-lg border border-amber-800 ${item.color}`}>
                   <Icon className="w-3.5 h-3.5" />
                 </div>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{item.label}</span>
+                <span className="text-[10px] font-black text-amber-800 uppercase tracking-wider">{item.label}</span>
               </div>
-              <p className="text-xs font-bold text-[#0F172A] truncate">{item.value || 'N/A'}</p>
+              <p className="text-xs font-black text-slate-900 truncate">{item.value || 'N/A'}</p>
             </div>
           );
         })}

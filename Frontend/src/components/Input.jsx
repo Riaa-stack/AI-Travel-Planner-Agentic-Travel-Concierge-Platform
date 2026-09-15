@@ -18,20 +18,20 @@ export default function Input({
           {label}
         </label>
       )}
-      <div className="relative rounded-xl shadow-xs">
+      <div className="relative rounded-2xl">
         {Icon && (
-          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
             <Icon className="w-4 h-4" />
           </div>
         )}
         <input
           id={inputId}
           type={type}
-          className={`w-full text-xs sm:text-sm bg-white border ${
-            error ? 'border-red-500 focus:ring-red-500' : 'border-slate-300 focus:border-blue-600 focus:ring-blue-500/20'
-          } rounded-xl ${
+          className={`w-full text-xs sm:text-sm bg-[#F8FAFC] border-2 ${
+            error ? 'border-rose-600 focus:ring-rose-500' : 'border-slate-900 focus:border-blue-600 focus:ring-blue-500/20'
+          } rounded-2xl ${
             Icon ? 'pl-10' : 'pl-3.5'
-          } pr-3.5 py-2.5 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 transition-all ${className}`}
+          } pr-3.5 py-2.5 text-slate-900 font-medium placeholder:text-slate-400 shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] focus:bg-white focus:outline-none focus:ring-2 transition-all ${className}`}
           {...props}
         />
       </div>

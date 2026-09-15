@@ -5,11 +5,11 @@ import Footer from '../components/Footer';
 
 export default function DashboardLayout({ children }) {
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC]">
+    <div className="min-h-screen flex flex-col bg-[#F9F8F5]">
       <Navbar />
       <div className="flex-1 flex max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-6">
         <Sidebar />
-        <main className="flex-1 min-w-0">{children}</main>
+        <main className="flex-1 min-w-0 py-2">{children}</main>
       </div>
       <Footer />
     </div>

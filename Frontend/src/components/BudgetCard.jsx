@@ -24,18 +24,18 @@ export default function BudgetCard({ budgets = {}, totalBudget = '$0' }) {
   const numericTotal = categories.reduce((sum, c) => sum + c.value, 0) || 1;
 
   return (
-    <div className="p-5 bg-white border border-slate-200/80 rounded-2xl shadow-xs space-y-4">
+    <div className="p-5 bg-[#ECFDF5] border-2 border-emerald-800 text-emerald-950 rounded-3xl shadow-[4px_4px_0px_#15803D] space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Budget Breakdown</h3>
-          <p className="text-lg font-extrabold text-slate-900">{totalBudget} </p>
+          <h3 className="text-xs font-black uppercase tracking-widest text-emerald-800">Budget Breakdown</h3>
+          <p className="text-xl font-black text-emerald-950 mt-0.5">{totalBudget}</p>
         </div>
-        <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+        <div className="w-9 h-9 rounded-2xl bg-white border-2 border-emerald-800 text-emerald-800 flex items-center justify-center font-black shadow-[2px_2px_0px_#15803D]">
           <DollarSign className="w-5 h-5" />
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-3 pt-1 border-t-2 border-emerald-200">
         {categories.map((cat, idx) => {
           const Icon = cat.icon;
           const percentage = Math.min(100, Math.round((cat.value / numericTotal) * 100));
@@ -43,14 +43,15 @@ export default function BudgetCard({ budgets = {}, totalBudget = '$0' }) {
           return (
             <div key={idx} className="space-y-1">
               <div className="flex items-center justify-between text-xs">
-                <span className="flex items-center gap-1.5 font-medium text-slate-700">
-                  <Icon className="w-3.5 h-3.5 text-slate-400" />
+                <span className="flex items-center gap-1.5 font-bold text-emerald-900">
+                  <Icon className="w-3.5 h-3.5 text-emerald-700" />
                   {cat.label}
                 </span>
-                <span className="font-bold text-slate-900">
+                <span className="font-black text-emerald-950">
                   {formatMoney(cat.value)} ({percentage}%)
-                </span>              </div>
-              <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                </span>
+              </div>
+              <div className="w-full h-2 bg-white border border-emerald-800 rounded-full overflow-hidden">
                 <div
                   className={`h-full ${cat.color} rounded-full transition-all duration-500`}
                   style={{ width: `${percentage}%` }}

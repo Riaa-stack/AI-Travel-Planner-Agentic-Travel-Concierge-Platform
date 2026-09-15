@@ -84,7 +84,7 @@ export default function SavedTripsPage() {
               >
                 <Card
                   padding="p-0"
-                  className="overflow-hidden border-slate-200/80 flex flex-col justify-between h-full hover:shadow-lg transition-all"
+                  className="overflow-hidden border-2 border-slate-900 flex flex-col justify-between h-full rounded-3xl shadow-[4px_4px_0px_#0F172A] hover:-translate-y-1 transition-all"
                 >
                   <div>
                     <div className="relative h-44">
@@ -94,12 +94,12 @@ export default function SavedTripsPage() {
                         className="w-full h-full object-cover"
                         referrerPolicy="no-referrer"
                       />
-                      <span className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                      <span className="absolute top-3 left-3 bg-slate-900 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase border border-slate-900 shadow-[1px_1px_0px_#0F172A]">
                         {trip.days} Days
                       </span>
-                      <span className="absolute top-3 right-3 bg-blue-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-xs">
+                      <span className="absolute top-3 right-3 bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full border border-slate-900 shadow-[1px_1px_0px_#0F172A]">
                         <>
-                          <div className="font-bold text-white">
+                          <div className="font-black text-white">
                             {new Intl.NumberFormat("en-US", {
                               style: "currency",
                               currency: "USD",
@@ -107,7 +107,7 @@ export default function SavedTripsPage() {
                             }).format(trip.numericBudget)}
                           </div>
 
-                          <div className="text-[10px] text-blue-100">
+                          <div className="text-[10px] text-blue-100 font-bold">
                             (
                             {new Intl.NumberFormat("en-IN", {
                               style: "currency",
@@ -121,15 +121,15 @@ export default function SavedTripsPage() {
                     </div>
 
                     <div className="p-5 space-y-2">
-                      <h3 className="text-base font-bold text-slate-900 truncate">{trip.destination}</h3>
-                      <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 font-medium">
+                      <h3 className="text-base font-black text-slate-900 truncate">{trip.destination}</h3>
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 font-bold">
                         <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5 text-blue-600" /> {trip.startDate}</span>
                         <span className="flex items-center gap-1"><Compass className="w-3.5 h-3.5 text-emerald-600" /> {trip.travelStyle}</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="p-4 pt-0 border-t border-slate-100 flex items-center justify-between gap-2 mt-2">
+                  <div className="p-4 pt-0 border-t-2 border-slate-100 flex items-center justify-between gap-2 mt-2">
                     <Button
                       variant="primary"
                       size="sm"
@@ -154,7 +154,7 @@ export default function SavedTripsPage() {
 
                     <button
                       onClick={() => deleteTrip(trip.id)}
-                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                      className="p-2 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl border-2 border-transparent hover:border-rose-600 transition-colors"
                       title="Delete Trip"
                     >
                       <Trash2 className="w-4 h-4" />

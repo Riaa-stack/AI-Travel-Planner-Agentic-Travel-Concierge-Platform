@@ -12,12 +12,12 @@ export default function Card({
   return (
     <div
       onClick={onClick}
-      className={`rounded-2xl border ${
+      className={`rounded-3xl border-2 border-slate-900 ${
         glass 
-          ? 'bg-white/70 backdrop-blur-md border-white/40 shadow-xs' 
-          : 'bg-white border-slate-200/80 shadow-xs'
+          ? 'bg-white/90 backdrop-blur-md shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),4px_4px_0px_#0F172A]' 
+          : 'bg-white shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),4px_4px_0px_#0F172A]'
       } ${
-        hoverEffect ? 'hover:shadow-md hover:border-slate-300 transition-all duration-200' : ''
+        hoverEffect ? 'hover:-translate-y-0.5 hover:shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),6px_6px_0px_#0F172A] transition-all duration-200' : ''
       } ${padding} ${onClick ? 'cursor-pointer' : ''} ${className}`}
       {...props}
     >

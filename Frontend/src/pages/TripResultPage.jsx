@@ -138,10 +138,12 @@ export default function TripResultPage() {
         </div>
 
         {/* 1. Trip Summary Header */}
-        <TripSummary summary={activeTrip.tripSummary} days={activeTrip.days} />
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+          <TripSummary summary={activeTrip.tripSummary} days={activeTrip.days} />
+        </motion.div>
 
         {/* 2. Interactive Leaflet Map Section */}
-        <div className="space-y-3">
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.08 }} className="space-y-3">
           <SectionHeader
             title="Interactive Route & Marker Map"
             subtitle="Leaflet Map with color-coded pins: Blue (Activities), Green (Hotels), Orange (Tourist Places)"
@@ -154,46 +156,60 @@ export default function TripResultPage() {
             attractions={activeTrip.attractions || []}
             className="h-[480px]"
           />
-        </div>
+        </motion.div>
 
         {/* 3. Budget & Weather & Crowd Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <BudgetCard budgets={activeTrip.budgets} totalBudget={activeTrip.budget} />
+        <motion.div 
+          initial="hidden" 
+          animate="visible" 
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.12 } }
+          }} 
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}>
+            <BudgetCard budgets={activeTrip.budgets} totalBudget={activeTrip.budget} />
+          </motion.div>
           
-          <WeatherCard weather={activeTrip.weather} />
+          <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}>
+            <WeatherCard weather={activeTrip.weather} />
+          </motion.div>
 
           {/* Crowd Insights Card */}
-          <Card className="p-5 border-slate-200/80 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Crowd Density Radar</h3>
-              <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
-                <Users className="w-4 h-4" />
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <div>
-                <p className="text-[10px] uppercase font-bold text-slate-400">Crowd Level</p>
-                <p className="text-sm font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-lg inline-block mt-0.5">
-                  {activeTrip.crowdInfo?.level || 'Moderate'}
-                </p>
+          <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}>
+            <Card className="p-5 bg-[#F3E8FF] border-2 border-purple-800 text-purple-950 rounded-3xl shadow-[4px_4px_0px_#6B21A8] space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-black uppercase tracking-widest text-purple-900">Crowd Density Radar</h3>
+                <div className="w-8 h-8 rounded-xl bg-purple-200 border border-purple-800 text-purple-900 flex items-center justify-center font-black">
+                  <Users className="w-4 h-4" />
+                </div>
               </div>
 
-              <div>
-                <p className="text-[10px] uppercase font-bold text-slate-400">Best Visit Window</p>
-                <p className="text-xs font-bold text-slate-800">{activeTrip.crowdInfo?.bestVisitTime || '8:00 AM - 10:30 AM'}</p>
-              </div>
+              <div className="space-y-3 pt-1 border-t-2 border-purple-200">
+                <div>
+                  <p className="text-[10px] uppercase font-black text-purple-800">Crowd Level</p>
+                  <p className="text-xs font-black text-purple-950 bg-white border border-purple-800 px-3 py-1 rounded-xl inline-block mt-1 shadow-[1px_1px_0px_#6B21A8]">
+                    {activeTrip.crowdInfo?.level || 'Moderate'}
+                  </p>
+                </div>
 
-              <div>
-                <p className="text-[10px] uppercase font-bold text-slate-400">Congestion Risk</p>
-                <p className="text-xs text-slate-600">{activeTrip.crowdInfo?.congestionRisk || 'Low congestion during morning'}</p>
+                <div>
+                  <p className="text-[10px] uppercase font-black text-purple-800">Best Visit Window</p>
+                  <p className="text-xs font-black text-slate-900">{activeTrip.crowdInfo?.bestVisitTime || '8:00 AM - 10:30 AM'}</p>
+                </div>
+
+                <div>
+                  <p className="text-[10px] uppercase font-black text-purple-800">Congestion Risk</p>
+                  <p className="text-xs font-bold text-slate-700">{activeTrip.crowdInfo?.congestionRisk || 'Low congestion during morning'}</p>
+                </div>
               </div>
-            </div>
-          </Card>
-        </div>
+            </Card>
+          </motion.div>
+        </motion.div>
 
         {/* 4. Day-Wise Itinerary Accordion */}
-        <div className="space-y-3">
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.2 }} className="space-y-3">
           <SectionHeader
             title="Day-Wise Agentic Itinerary"
             subtitle="Hour-by-hour planned schedule with locations, costs, and travel tips"
@@ -205,11 +221,11 @@ export default function TripResultPage() {
               <Timeline activities={dayItem.activities || []} />
             )}
           />
-        </div>
+        </motion.div>
 
         {/* 5. Recommended Hotels Section */}
         {activeTrip.hotels && activeTrip.hotels.length > 0 && (
-          <div className="space-y-3">
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.25 }} className="space-y-3">
             <SectionHeader
               title="Recommended Hotels & Stays"
               subtitle="Curated based on your travel style and budget preferences"
@@ -225,12 +241,12 @@ export default function TripResultPage() {
                 />
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* 6. Travel Companion & Local Insights Section */}
         {activeTrip.companionTips && (
-          <div className="space-y-4">
+          <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.3 }} className="space-y-4">
             <SectionHeader
               title="Travel Companion & Local Insights"
               subtitle="Essential packing lists, safety advisories, and local etiquette"
@@ -239,12 +255,12 @@ export default function TripResultPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Packing */}
-              <Card className="p-4 space-y-2 border-slate-200/80">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-                  <Luggage className="w-4 h-4 text-blue-600" />
+              <Card className="p-4 space-y-2 bg-[#EFF6FF] border-2 border-blue-800 rounded-3xl shadow-[3px_3px_0px_#1E40AF]">
+                <div className="flex items-center gap-2 text-xs font-black text-blue-950">
+                  <Luggage className="w-4 h-4 text-blue-700" />
                   <span>Packing Essentials</span>
                 </div>
-                <ul className="text-xs text-slate-600 space-y-1 list-disc pl-4">
+                <ul className="text-xs text-blue-900 font-bold space-y-1 list-disc pl-4">
                   {activeTrip.companionTips.packing?.map((item, i) => (
                     <li key={i}>{item}</li>
                   ))}
@@ -252,12 +268,12 @@ export default function TripResultPage() {
               </Card>
 
               {/* Safety & Emergency */}
-              <Card className="p-4 space-y-2 border-slate-200/80">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-                  <PhoneCall className="w-4 h-4 text-red-500" />
+              <Card className="p-4 space-y-2 bg-[#FFE4E6] border-2 border-rose-800 rounded-3xl shadow-[3px_3px_0px_#9F1239]">
+                <div className="flex items-center gap-2 text-xs font-black text-rose-950">
+                  <PhoneCall className="w-4 h-4 text-rose-700" />
                   <span>Safety & Emergency</span>
                 </div>
-                <ul className="text-xs text-slate-600 space-y-1 list-disc pl-4">
+                <ul className="text-xs text-rose-900 font-bold space-y-1 list-disc pl-4">
                   {activeTrip.companionTips.emergency?.map((item, i) => (
                     <li key={i}>{item}</li>
                   ))}
@@ -265,12 +281,12 @@ export default function TripResultPage() {
               </Card>
 
               {/* Food Recommendations */}
-              <Card className="p-4 space-y-2 border-slate-200/80">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-                  <Utensils className="w-4 h-4 text-emerald-600" />
+              <Card className="p-4 space-y-2 bg-[#ECFDF5] border-2 border-emerald-800 rounded-3xl shadow-[3px_3px_0px_#065F46]">
+                <div className="flex items-center gap-2 text-xs font-black text-emerald-950">
+                  <Utensils className="w-4 h-4 text-emerald-700" />
                   <span>Local Gastronomy</span>
                 </div>
-                <ul className="text-xs text-slate-600 space-y-1 list-disc pl-4">
+                <ul className="text-xs text-emerald-900 font-bold space-y-1 list-disc pl-4">
                   {activeTrip.companionTips.food?.map((item, i) => (
                     <li key={i}>{item}</li>
                   ))}
@@ -278,19 +294,19 @@ export default function TripResultPage() {
               </Card>
 
               {/* Etiquette */}
-              <Card className="p-4 space-y-2 border-slate-200/80">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-                  <Info className="w-4 h-4 text-purple-600" />
+              <Card className="p-4 space-y-2 bg-[#F3E8FF] border-2 border-purple-800 rounded-3xl shadow-[3px_3px_0px_#5B21B6]">
+                <div className="flex items-center gap-2 text-xs font-black text-purple-950">
+                  <Info className="w-4 h-4 text-purple-700" />
                   <span>Cultural Etiquette</span>
                 </div>
-                <ul className="text-xs text-slate-600 space-y-1 list-disc pl-4">
+                <ul className="text-xs text-purple-900 font-bold space-y-1 list-disc pl-4">
                   {activeTrip.companionTips.etiquette?.map((item, i) => (
                     <li key={i}>{item}</li>
                   ))}
                 </ul>
               </Card>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Replan Trip Popup Modal */}
